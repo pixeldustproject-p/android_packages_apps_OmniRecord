@@ -6,7 +6,7 @@
 
     <application
         android:label="@string/app_name"
-        android:icon="@drawable/omnirom_logo" >
+        android:icon="@mipmap/ic_launcher" >
 
         <receiver android:name=".TakeScreenRecordService$ScreenRecordReceiver" >
             <intent-filter>
