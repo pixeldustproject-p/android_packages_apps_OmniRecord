@@ -96,6 +96,7 @@ class GlobalScreenRecord {
 
     private String mNotifContent = null;
     private boolean mHintShowing = false;
+    private boolean mHigherAspectRatio;
 
     private long mRecordingStartTime = 0;
     private long mRecordingTotalTime = 0;
@@ -110,9 +111,11 @@ class GlobalScreenRecord {
     private class CaptureThread extends Thread {
         private Runnable mFInisher;
         private int mMode;
+        private boolean mHigherAspectRatio;
 
-        public void setMode(int mode) {
+        public void setMode(int mode, boolean higherAspectRatio) {
             mMode = mode;
+            mHigherAspectRatio = higherAspectRatio;
         }
 
         public void run() {
@@ -126,21 +129,21 @@ class GlobalScreenRecord {
                 case SCREEN_RECORD_LOW_QUALITY:
                     // low resolution and 1.5Mbps
                     cmds[2] = "--size";
-                    cmds[3] = "480x800";
+                    cmds[3] = mHigherAspectRatio ? "480x960" : "480x800";
                     cmds[4] = "--bit-rate";
                     cmds[5] = "1500000";
                     break;
                 case SCREEN_RECORD_MID_QUALITY:
                     // default resolution (720p) and 4Mbps
                     cmds[2] = "--size";
-                    cmds[3] = "720x1280";
+                    cmds[3] = mHigherAspectRatio ? "720x1440" : "720x1280";
                     cmds[4] = "--bit-rate";
                     cmds[5] = "4000000";
                     break;
                 case SCREEN_RECORD_HIGH_QUALITY:
                     // default resolution (720p) and 8Mbps
                     cmds[2] = "--size";
-                    cmds[3] = "720x1280";
+                    cmds[3] = mHigherAspectRatio ? "720x1440" : "720x1280";
                     cmds[4] = "--bit-rate";
                     cmds[5] = "8000000";
                     break;
@@ -194,6 +197,8 @@ class GlobalScreenRecord {
      */
     public GlobalScreenRecord(Context context) {
         mContext = context;
+        mHigherAspectRatio = Resources.getSystem().getBoolean(
+                com.android.internal.R.bool.config_haveHigherAspectRatioScreen);
         mHandler = new Handler() {
             public void handleMessage(Message msg) {
                 if (msg.what == MSG_TASK_ENDED) {
@@ -238,7 +243,7 @@ class GlobalScreenRecord {
 
         setFinisher(finisher);
         mCaptureThread = new CaptureThread();
-        mCaptureThread.setMode(mode);
+        mCaptureThread.setMode(mode, mHigherAspectRatio);
         mCaptureThread.start();
 
         showHint();
@@ -256,7 +261,7 @@ class GlobalScreenRecord {
 
         setFinisher(finisher);
         mCaptureThread = new CaptureThread();
-        mCaptureThread.setMode(mode);
+        mCaptureThread.setMode(mode, mHigherAspectRatio);
         mCaptureThread.start();
 
         showHint();
@@ -268,15 +273,15 @@ class GlobalScreenRecord {
         final String base = r.getString(R.string.screenrecord_notif_title);
         switch (mode) {
             case GlobalScreenRecord.SCREEN_RECORD_LOW_QUALITY:
-                mNotifContent = base + " - 480x800 @1.5Mbps";
+                mNotifContent = base + " - 480p @1.5Mbps";
                 mRecordingStartTime = System.currentTimeMillis();
                 break;
             case GlobalScreenRecord.SCREEN_RECORD_MID_QUALITY:
-                mNotifContent = base + " - 720x1280 @4Mbps";
+                mNotifContent = base + " - 720p @4Mbps";
                 mRecordingStartTime = System.currentTimeMillis();
                 break;
             case GlobalScreenRecord.SCREEN_RECORD_HIGH_QUALITY:
-                mNotifContent = base + " - 720x1280 @8Mbps";
+                mNotifContent = base + " - 720p @8Mbps";
                 mRecordingStartTime = System.currentTimeMillis();
                 break;
             case -1:
