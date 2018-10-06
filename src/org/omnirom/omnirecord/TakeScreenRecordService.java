@@ -11,56 +11,18 @@ import android.os.UserManager;
 import android.provider.Settings;
 
 public class TakeScreenRecordService extends Service {
-    private static final String TAG = "TakeScreenrecordService";
+    private static final String TAG = "TakeScreenRecordService";
 
     public static final String ACTION_STOP = "stop";
     public static final String ACTION_TOGGLE_POINTER = "toggle_pointer";
     public static final String ACTION_TOGGLE_HINT = "toggle_hint";
     public static final String ACTION_START = "start";
+    public static final String ACTION_EXTRA_MODE = "mode";
 
     private static GlobalScreenRecord mScreenrecord;
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            final Messenger callback = msg.replyTo;
-            Runnable finisher = new Runnable() {
-                @Override
-                public void run() {
-                    Message reply = Message.obtain(null, 1);
-                    try {
-                        callback.send(reply);
-                        // after using onStartCommand, the service must be stopped manually
-                        stopSelf();
-                    } catch (RemoteException e) {
-                    }
-                }
-            };
-
-            // If the storage for this user is locked, we have no place to store
-            // the screenrecord file, so skip taking it.
-            if (!getSystemService(UserManager.class).isUserUnlocked()) {
-                post(finisher);
-                return;
-            }
-
-            switch (msg.what) {
-                case GlobalScreenRecord.SCREEN_RECORD_LOW_QUALITY:
-                    toggleScreenrecord(finisher, GlobalScreenRecord.SCREEN_RECORD_LOW_QUALITY);
-                    break;
-                case GlobalScreenRecord.SCREEN_RECORD_MID_QUALITY:
-                    toggleScreenrecord(finisher, GlobalScreenRecord.SCREEN_RECORD_MID_QUALITY);
-                    break;
-                case GlobalScreenRecord.SCREEN_RECORD_HIGH_QUALITY:
-                    toggleScreenrecord(finisher, GlobalScreenRecord.SCREEN_RECORD_HIGH_QUALITY);
-                    break;
-            }
-        }
-    };
-
     @Override
     public IBinder onBind(Intent intent) {
-        //return new Messenger(mHandler).getBinder();
         return null;
     }
 
@@ -85,7 +47,8 @@ public class TakeScreenRecordService extends Service {
                         stopSelf();
                     }
                 };
-                toggleScreenrecord(finisher, GlobalScreenRecord.SCREEN_RECORD_MID_QUALITY);
+                int mode = intent.getIntExtra(ACTION_EXTRA_MODE, GlobalScreenRecord.SCREEN_RECORD_MID_QUALITY);
+                toggleScreenrecord(finisher, mode);
             }
         }
 

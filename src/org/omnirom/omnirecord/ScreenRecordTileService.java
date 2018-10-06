@@ -36,6 +36,7 @@ public class ScreenRecordTileService extends TileService {
         sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
         Intent startIntent = new Intent(this, TakeScreenRecordService.class);
         startIntent.setAction(TakeScreenRecordService.ACTION_START);
+        startIntent.putExtra(TakeScreenRecordService.ACTION_EXTRA_MODE, GlobalScreenRecord.SCREEN_RECORD_MID_QUALITY);
         startService(startIntent);
     }
 }
