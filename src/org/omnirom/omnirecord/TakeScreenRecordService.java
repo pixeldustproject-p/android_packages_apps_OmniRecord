@@ -1,13 +1,27 @@
-package org.omnirom.omnirecord;
+/*
+ *  Copyright (C) 2018 The OmniROM Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+ package org.omnirom.omnirecord;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
-import android.os.UserManager;
 import android.provider.Settings;
 
 public class TakeScreenRecordService extends Service {
@@ -16,10 +30,25 @@ public class TakeScreenRecordService extends Service {
     public static final String ACTION_STOP = "stop";
     public static final String ACTION_TOGGLE_POINTER = "toggle_pointer";
     public static final String ACTION_TOGGLE_HINT = "toggle_hint";
-    public static final String ACTION_START = "start";
+    public static final String ACTION_START = "org.omnirom.omnirecord.ACTION_START";
     public static final String ACTION_EXTRA_MODE = "mode";
 
     private static GlobalScreenRecord mScreenrecord;
+
+    public static class ScreenRecordReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(final Context context, Intent intent) {
+            try {
+                String action = intent.getAction();
+                if (action.equals(ACTION_START)) {
+                    Intent startIntent = new Intent(context, TakeScreenRecordService.class);
+                    startIntent.setAction(TakeScreenRecordService.ACTION_START);
+                    context.startService(startIntent);
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -47,8 +76,12 @@ public class TakeScreenRecordService extends Service {
                         stopSelf();
                     }
                 };
-                int mode = intent.getIntExtra(ACTION_EXTRA_MODE, GlobalScreenRecord.SCREEN_RECORD_MID_QUALITY);
-                toggleScreenrecord(finisher, mode);
+                if (intent.hasExtra(ACTION_EXTRA_MODE)) {
+                    int mode = intent.getIntExtra(ACTION_EXTRA_MODE, GlobalScreenRecord.SCREEN_RECORD_MID_QUALITY);
+                    toggleScreenrecord(finisher, mode);
+                } else {
+                    toggleScreenrecord(finisher);
+                }
             }
         }
 
@@ -60,6 +93,13 @@ public class TakeScreenRecordService extends Service {
             mScreenrecord = new GlobalScreenRecord(TakeScreenRecordService.this);
         }
         mScreenrecord.takeScreenrecord(finisher, mode);
+    }
+
+    private void startScreenrecord(Runnable finisher) {
+        if (mScreenrecord == null) {
+            mScreenrecord = new GlobalScreenRecord(TakeScreenRecordService.this);
+        }
+        mScreenrecord.takeScreenrecord(finisher);
     }
 
     private void stopScreenrecord() {
@@ -76,6 +116,14 @@ public class TakeScreenRecordService extends Service {
     private void toggleScreenrecord(Runnable finisher, int mode) {
         if (mScreenrecord == null || !mScreenrecord.isRecording()) {
             startScreenrecord(finisher, mode);
+        } else {
+            stopScreenrecord();
+        }
+    }
+
+    private void toggleScreenrecord(Runnable finisher) {
+        if (mScreenrecord == null || !mScreenrecord.isRecording()) {
+            startScreenrecord(finisher);
         } else {
             stopScreenrecord();
         }

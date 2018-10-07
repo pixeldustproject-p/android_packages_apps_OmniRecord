@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:entries="@array/record_mode_entries"
+        android:entryValues="@array/record_mode_values"
+        android:key="record_mode"
+        android:title="@string/record_mode_title"
+        android:defaultValue="1"/>
+
+</PreferenceScreen>

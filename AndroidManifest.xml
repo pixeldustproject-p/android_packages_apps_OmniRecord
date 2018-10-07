@@ -7,6 +7,12 @@
     <application
         android:label="@string/app_name">
 
+        <receiver android:name=".TakeScreenRecordService$ScreenRecordReceiver" >
+            <intent-filter>
+                <action android:name="org.omnirom.omnirecord.ACTION_START" />
+            </intent-filter>
+        </receiver>
+
         <service android:name=".TakeScreenRecordService"
                  android:exported="false" />
 
@@ -21,8 +27,8 @@
         <!-- Callback for deleting screenrecord notification -->
         <receiver android:name=".GlobalScreenRecord$DeleteScreenrecordReceiver"
                   android:exported="false" />
-        
-        <service
+
+        <!--<service
             android:name=".ScreenRecordTileService"
             android:icon="@drawable/ic_qs_screenrecord_mq"
             android:label="@string/screenrecord_tile"
@@ -31,6 +37,16 @@
                 <action
                     android:name="android.service.quicksettings.action.QS_TILE"/>
             </intent-filter>
-        </service>
+        </service>-->
+
+        <activity
+            android:name=".SettingsActivity"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.DeviceDefault.Settings" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

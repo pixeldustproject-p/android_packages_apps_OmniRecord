@@ -1,4 +1,21 @@
-package org.omnirom.omnirecord;
+/*
+ *  Copyright (C) 2018 The OmniROM Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+ package org.omnirom.omnirecord;
 
 import android.app.ActivityManager;
 import android.app.ActivityOptions;
@@ -10,6 +27,7 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.media.MediaScannerConnection;
@@ -20,6 +38,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
@@ -81,6 +100,8 @@ class GlobalScreenRecord {
     private long mRecordingStartTime = 0;
     private long mRecordingTotalTime = 0;
     private long mFileSize = 0;
+
+    private SharedPreferences mPrefs;
 
     private void setFinisher(Runnable finisher) {
         mFinisher = finisher;
@@ -198,6 +219,8 @@ class GlobalScreenRecord {
                         SCREENRECORDS,
                         context.getString(R.string.notification_channel_screenrecord),
                         NotificationManager.IMPORTANCE_LOW));
+
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
     public boolean isRecording() {
@@ -212,6 +235,24 @@ class GlobalScreenRecord {
             Log.e(TAG, "Capture Thread is already running, ignoring screenrecord start request");
             return;
         }
+
+        setFinisher(finisher);
+        mCaptureThread = new CaptureThread();
+        mCaptureThread.setMode(mode);
+        mCaptureThread.start();
+
+        showHint();
+        updateNotification(mode);
+    }
+
+    void takeScreenrecord(Runnable finisher) {
+        if (mCaptureThread != null) {
+            Log.e(TAG, "Capture Thread is already running, ignoring screenrecord start request");
+            return;
+        }
+
+        String modeString = mPrefs.getString(SettingsActivity.PREF_RECORD_MODE, "1");
+        int mode = Integer.valueOf(modeString);
 
         setFinisher(finisher);
         mCaptureThread = new CaptureThread();

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="record_mode_entries" translatable="false">
+        <item>@string/record_mode_low</item>
+        <item>@string/record_mode_medium</item>
+        <item>@string/record_mode_high</item>
+    </string-array>
+    <string-array name="record_mode_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+</resources>
