@@ -141,9 +141,9 @@ class GlobalScreenRecord {
                     cmds[5] = "4000000";
                     break;
                 case SCREEN_RECORD_HIGH_QUALITY:
-                    // default resolution (720p) and 8Mbps
+                    // default resolution (1080p) and 8Mbps
                     cmds[2] = "--size";
-                    cmds[3] = mHigherAspectRatio ? "720x1440" : "720x1280";
+                    cmds[3] = mHigherAspectRatio ? "1080x2160" : "1080x1920";
                     cmds[4] = "--bit-rate";
                     cmds[5] = "8000000";
                     break;
