@@ -1,0 +1,24 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Bildschirmaufnahme</string>
+    <string name="screenrecord_notif_ticker">Bildschirmaufnahme läuft</string>
+    <string name="screenrecord_notif_final_ticker">Bildschirmaufnahme erfolgreich</string>
+    <!-- Screenrecord notification title -->
+    <string name="screenrecord_notif_title">Bildschirmaufnahme läuft</string>
+    <!-- Screenrecord notification action: Stop -->
+    <string name="screenrecord_notif_stop">Stopp</string>
+    <string name="screenrecord_notif_completed">Bildschirmaufnahme erfolgreich</string>
+    <!-- Screenrecord notification action: show/hide pointer -->
+    <string name="screenrecord_notif_pointer_on">Zeigerposition einblenden</string>
+    <string name="screenrecord_notif_pointer_off">Zeigerposition ausblenden</string>
+    <!-- Screen record notification error title -->
+    <string name="screenrecord_notif_error">Bildschirmaufnahme nicht möglich</string>
+    <string name="notification_channel_screenrecord">Bildschirmaufnahmen</string>
+    <string name="screenrecord_hide_hint">Hinweis nicht anzeigen</string>
+    <string name="screenrecord_show_hint">Hinweis anzeigen</string>
+    <string name="screenrecord_tile">Bildschirmaufnahme</string>
+    <string name="record_mode_title">Aufnahmemodus</string>
+    <string name="record_mode_low">Niedrige Qualität</string>
+    <string name="record_mode_medium">Mittlere Qualität</string>
+    <string name="record_mode_high">Hohe Qualität</string>
+</resources>
