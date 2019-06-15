@@ -1,0 +1,24 @@
+
+<resources>
+    <string name="app_name">画面録画</string>
+    <string name="screenrecord_notif_ticker">画面は録画されています</string>
+    <string name="screenrecord_notif_final_ticker">画面の録画に成功しました</string>
+    <!-- Screenrecord notification title -->
+    <string name="screenrecord_notif_title">画面の録画中</string>
+    <!-- Screenrecord notification action: Stop -->
+    <string name="screenrecord_notif_stop">停止</string>
+    <string name="screenrecord_notif_completed">画面の録画に成功しました</string>
+    <!-- Screenrecord notification action: show/hide pointer -->
+    <string name="screenrecord_notif_pointer_on">ポインターを表示</string>
+    <string name="screenrecord_notif_pointer_off">ポインターを非表示</string>
+    <!-- Screen record notification error title -->
+    <string name="screenrecord_notif_error">画面を録画できません</string>
+    <string name="notification_channel_screenrecord">画面録画</string>
+    <string name="screenrecord_hide_hint">ヒントを非表示</string>
+    <string name="screenrecord_show_hint">ヒントを表示</string>
+    <string name="screenrecord_tile">画面録画</string>
+    <string name="record_mode_title">録画モード</string>
+    <string name="record_mode_low">低品質</string>
+    <string name="record_mode_medium">中品質</string>
+    <string name="record_mode_high">高品質</string>
+</resources>
